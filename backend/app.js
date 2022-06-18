@@ -1,3 +1,5 @@
+const dotenv = require('dotenv').config('../.env');
+console.log(dotenv);
 const express = require('express');
 const app = express();
 const bodyparser = require('body-parser');
@@ -5,7 +7,9 @@ app.use(express.json());
 const mongoose = require('mongoose');
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
-mongoose.connect('mongodb+srv://ines:Anis.omri@cluster0.ebwhiej.mongodb.net/?retryWrites=true&w=majority',
+const path = require('path');
+mongoose.connect(`mongodb+srv://${process.env.ines}:${process.env.Anisomri}@${process.env.cluster0.ebwhiej}.mongodb.net/${process.env.test}?retryWrites=true&w=majority`,
+//mongoose.connect('mongodb+srv://ines:Anis.omri@cluster0.ebwhiej.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -17,6 +21,7 @@ mongoose.connect('mongodb+srv://ines:Anis.omri@cluster0.ebwhiej.mongodb.net/?ret
     next();
   });
   app.use(bodyparser.json());
+  app.use('/images', express.static(path.join(__dirname, 'images')));
   app.use('/api/sauces', sauceRoutes);
   app.use('/api/auth', userRoutes);
 module.exports = app;
